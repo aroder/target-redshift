@@ -4,6 +4,7 @@ from singer import utils
 import sshtunnel
 from target_postgres import target_tools
 from target_postgres.postgres import MillisLoggingConnection
+import time
 
 from target_redshift.redshift import RedshiftTarget
 from target_redshift.s3 import S3
@@ -43,6 +44,7 @@ def main(config, input_stream=None):
                 remote_bind_address=(config['redshift_host'], int(config['redshift_port']))
             )
             tunnel.start()
+            time.sleep(1)
             config['redshift_host'] = '127.0.0.1' # rewrite the config to go through the tunnel
             config['redshift_port'] = tunnel.local_bind_port
         else:
